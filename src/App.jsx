@@ -8,7 +8,7 @@ import Quote from './Pages/Quote';
 import Contact from "./pages/Contact";
 import Products from "./pages/Products,";
 import FloatingHomeButton from "./components/FloatingHomeButton";
-import QuoteForm from "./components/QuoteForm";
+
 
 
 const App = () => (
@@ -23,7 +23,7 @@ const App = () => (
       <Route path="/products" element={<Products />} />
     </Routes>
     <FloatingHomeButton />
-    <QuoteForm />
+    
     <Footer />
   </>
 );
