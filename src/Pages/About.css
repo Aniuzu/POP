@@ -1,0 +1,129 @@
+/* About Page Styles */
+.about-section {
+  background-color: #f8f9fa;
+}
+
+.section-title {
+  color: #2c3e50;
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #0d6efd;
+}
+
+.about-image {
+  border: 5px solid white;
+  transition: transform 0.3s ease;
+}
+
+.about-image:hover {
+  transform: scale(1.02);
+}
+
+.about-text {
+  color: #495057;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.about-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.feature-icon {
+  color: #0d6efd;
+  font-size: 1.2rem;
+}
+
+.mission-card, .vision-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.mission-card:hover, .vision-card:hover {
+  transform: translateY(-5px);
+}
+
+.mission-card {
+  border-left: 4px solid #0d6efd;
+}
+
+.vision-card {
+  border-left: 4px solid #20c997;
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 1.8rem;
+  }
+  
+  .about-content {
+    text-align: center;
+  }
+  
+  .section-title::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .about-features {
+    align-items: center;
+  }
+}
+
+.about-image-placeholder {
+  background-color: #e9ecef;
+  border-radius: 8px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.construction-icons {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.icon {
+  position: absolute;
+  font-size: 5rem;
+  color: #2c3e50;
+  opacity: 0.7;
+}
+
+.building {
+  top: 20%;
+  left: 30%;
+}
+
+.hardhat {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.truck {
+  bottom: 20%;
+  right: 30%;
+}

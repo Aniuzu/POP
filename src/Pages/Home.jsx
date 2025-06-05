@@ -1,21 +1,25 @@
 import Hero from "../components/Hero";
-import Services from "./Services";
-import CarouselSection from "../components/Carousel"
-import WhyChooseUs from "../components/WhyChooses";
+import { Link } from 'react-router-dom';
 
 const Home = () => (
-  <>
+  <div>
     <Hero />
-    <div className="my-5 px-3 text-center">
-      <h2>About Us</h2>
-      <p className="lead">
-        We are a leading manufacturer of high-quality concrete blocks and supplier of other building materials. 
-        Serving construction companies and individual builders.
-      </p>
-    </div>
-    <CarouselSection />
-    <WhyChooseUs />
-  </>
+    <section className="py-5">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-md-8 text-center">
+            <h2 className="mb-4">Trusted Building Materials Supplier</h2>
+            <p className="lead mb-4">
+              With over 15 years of experience, we provide quality materials for all construction needs.
+            </p>
+            <Link to="/about" className="btn btn-outline-primary">
+              Our Story
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 );
 
 export default Home;
