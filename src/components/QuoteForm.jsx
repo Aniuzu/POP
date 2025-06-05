@@ -1,48 +1,121 @@
-const QuoteForm = () => (
-  <div id="quote" className="container my-5 py-5 bg-light rounded shadow">
-    <h2 className="text-center mb-4">Request a Quote</h2>
-    <form>
-      <div className="row mb-3">
-        <div className="col-md-6">
-          <label className="form-label">Full Name</label>
-          <input type="text" className="form-control" placeholder="Enter your full name" required />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Phone / WhatsApp</label>
-          <input type="tel" className="form-control" placeholder="080XXXXXXXX" required />
-        </div>
-      </div>
+import { useState } from 'react';
 
-      <div className="row mb-3">
-        <div className="col-md-6">
-          <label className="form-label">Product</label>
-          <select className="form-select" required>
-            <option value="">-- Select Product --</option>
-            <option>Concrete Blocks</option>
-            <option>Sand</option>
-            <option>Gravel</option>
-            <option>Cement</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Quantity (e.g. 100 bags / trips)</label>
-          <input type="text" className="form-control" placeholder="Enter quantity" required />
-        </div>
-      </div>
+const QuoteForm = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    product: '',
+    quantity: '',
+    address: ''
+  });
 
-      <div className="mb-3">
-        <label className="form-label">Delivery Address</label>
-        <textarea className="form-control" rows="3" placeholder="Enter full delivery address" required></textarea>
-      </div>
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-      <div className="text-center">
-        <button type="submit" className="btn btn-success px-5">
-          Submit Request
-        </button>
-      </div>
-    </form>
-  </div>
-);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add form submission logic here
+    console.log('Form submitted:', formData);
+    // You would typically add:
+    // - API call to backend
+    // - Success/error handling
+    // - Form reset
+  };
+
+  return (
+    <div id="quote" className="container my-5 py-5 bg-light rounded shadow">
+      <h2 className="text-center mb-4">Request a Quote</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label htmlFor="name" className="form-label">Full Name</label>
+            <input 
+              type="text" 
+              id="name"
+              name="name"
+              className="form-control" 
+              placeholder="Enter your full name" 
+              value={formData.name}
+              onChange={handleChange}
+              required 
+            />
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="phone" className="form-label">Phone / WhatsApp</label>
+            <input 
+              type="tel" 
+              id="phone"
+              name="phone"
+              className="form-control" 
+              placeholder="080XXXXXXXX" 
+              value={formData.phone}
+              onChange={handleChange}
+              required 
+            />
+          </div>
+        </div>
+
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label htmlFor="product" className="form-label">Product</label>
+            <select 
+              id="product"
+              name="product"
+              className="form-select" 
+              value={formData.product}
+              onChange={handleChange}
+              required
+            >
+              <option value="">-- Select Product --</option>
+              <option value="Concrete Blocks">Concrete Blocks</option>
+              <option value="Sand">Sand</option>
+              <option value="Gravel">Gravel</option>
+              <option value="Cement">Cement</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="quantity" className="form-label">Quantity (e.g. 100 bags/trips)</label>
+            <input 
+              type="text" 
+              id="quantity"
+              name="quantity"
+              className="form-control" 
+              placeholder="Enter quantity" 
+              value={formData.quantity}
+              onChange={handleChange}
+              required 
+            />
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="address" className="form-label">Delivery Address</label>
+          <textarea 
+            id="address"
+            name="address"
+            className="form-control" 
+            rows="3" 
+            placeholder="Enter full delivery address" 
+            value={formData.address}
+            onChange={handleChange}
+            required
+          ></textarea>
+        </div>
+
+        <div className="text-center">
+          <button type="submit" className="btn btn-primary px-5 py-2">
+            Submit Request
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
 
 export default QuoteForm;

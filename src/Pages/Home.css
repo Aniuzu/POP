@@ -1,0 +1,19 @@
+.construction-home {
+  overflow-x: hidden;
+}
+
+.about-preview {
+  background-color: #f8f9fa !important;
+  position: relative;
+}
+
+.about-preview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../assets/texture.png') repeat;
+  opacity: 0.03;
+}
