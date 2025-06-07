@@ -31,7 +31,7 @@ const Hero = () => {
           <Col lg={6} className="hero-image-col">
             <div className="hero-image-wrapper">
               <img
-                src={myImage}
+                src={heroImage}
                 alt="Description"
                 loading="lazy"  // This enables native lazy loading
                 className="img-fluid"
