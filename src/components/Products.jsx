@@ -52,7 +52,7 @@ const Products = () => {
             <Col key={product.id}>
               <Card className="h-100 product-card shadow-sm">
                 <div className="product-image-container">
-                  <Card.Img variant="top" src={product.image} />
+                  <Card.Img variant="top" src={product.image} className='img-fluid' loading='lazy' />
                 </div>
                 <Card.Body>
                   <Card.Title className="product-title">{product.title}</Card.Title>
