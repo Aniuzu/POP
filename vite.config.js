@@ -1,23 +1,18 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+﻿
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  base: '/',
-
   plugins: [react()],
+  base: "/", // Critical for Vercel
   build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-    chunkSizeWarningLimit: 1000,
-    cssCodeSplit: true,
+    assetsDir: "assets",
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ['react', 'react-dom'],
-          bootstrap: ['bootstrap', 'react-bootstrap'],
-          icons: ['react-icons']
-        }
+        assetFileNames: "assets/[name]-[hash].[ext]",
+        entryFileNames: "assets/[name]-[hash].js"
       }
     }
   }
 });
+'@ | Out-File -FilePath vite.config.js -Encoding utf8 -Force'
