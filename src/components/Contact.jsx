@@ -22,7 +22,7 @@ const Contact = () => {
                 <FaMapMarkerAlt className="me-3 mt-1" size={20} />
                 <div>
                   <h5>Address</h5>
-                  <p className="mb-0">1734 Example St, City, State, 17245</p>
+                  <p className="mb-0">No 675 Agbani RoundAbout</p>
                 </div>
               </div>
               
@@ -30,7 +30,7 @@ const Contact = () => {
                 <FaPhone className="me-3 mt-1" size={20} />
                 <div>
                   <h5>Phone</h5>
-                  <p className="mb-0">+1 (123) 456-7890</p>
+                  <p className="mb-0">(+234) 7064353435</p>
                 </div>
               </div>
               
