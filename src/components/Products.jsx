@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import concreteBlocks from '../assets/SolidBlock.png';
-import sand from '../assets/Sand.Png';
+import sand from '../assets/Sand.png';
 import cement from '../assets/Cement.png';
 import gravel from '../assets/Gravel.png';
 import './Products.css';
