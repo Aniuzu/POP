@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./Pages/Home";
-import About from "./pages/About";
+import About from "./Pages/About";
 import Quote from './Pages/Quote';
 import Products from "./components/Products"
 import FloatingHomeButton from "./components/FloatingHomeButton";
