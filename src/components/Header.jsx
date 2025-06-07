@@ -31,7 +31,7 @@ export default function Header() {
                                 <Link to="/about" className="nav-link fw-medium">About</Link>
                             </li>
                             <li className="nav-item mx-2">
-                                <Link to="/products" className="nav-link fw-medium">Products</Link>
+                                <Link to="/p" className="nav-link fw-medium">Products</Link>
                             </li>
                             <li className="nav-item mx-2">
                                 <Link to="/contact" className="nav-link fw-medium">Contact</Link>
