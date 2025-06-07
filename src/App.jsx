@@ -5,6 +5,7 @@ import Quote from './Pages/Quote';
 import Products from "./components/Products"
 import FloatingHomeButton from "./components/FloatingHomeButton";
 import Header from "./components/Header";
+import Contact from "./components/Contact";
 
 
 
@@ -16,6 +17,7 @@ const App = () => (
       <Route path="/about" element={<About />} />
        <Route path="/quote" element={<Quote />} />
       <Route path="/products" element={<Products />} />
+      <Route path="/contact" element={<Contact />} />
     </Routes>
     <FloatingHomeButton />
   </>
