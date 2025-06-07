@@ -1,9 +1,9 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import concreteBlocks from '../assets/SolidBlock.png';
-import sand from '../assets/Sand.png';
-import cement from '../assets/Cement.png';
-import gravel from '../assets/Gravel.png';
+import concreteBlocks from '../assets/SolidBlock.webp';
+import sand from '../assets/Sand.webp';
+import cement from '../assets/Cement.webp';
+import gravel from '../assets/Gravel.webp';
 import './Products.css';
 import { Link } from 'react-router-dom';
 

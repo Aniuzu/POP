@@ -157,8 +157,10 @@
   background-position: center;
 }
 
-.product-1 { background-image: url('../assets/concrete-blocks.jpg'); }
-.product-2 { background-image: url('../assets/sand.jpg'); }
+.product-2 { background-image: url('../assets/Sand.webp'); }
+.product-3 { background-image: url('../assets/Cement.webp'); }
+.product-1 { background-image: url('../assets/SolidBlock.webp'); }
+.product-5 { background-image: url('../assets/Gravel.webp'); }
 
 .product-features {
   list-style: none;
