@@ -18,7 +18,7 @@ export default function Header() {
                 <div className="container">
                     {/* Logo */}
                     <Link to="/" className="navbar-brand" onClick={() => setIsOpen(false)}>
-                        <span className="fs-3 fw-bold text-primary">BLOCKBIZ</span>
+                        <span className="fs-3 fw-bold text-primary">Evantlm services Nig ltd</span>
                     </Link>
 
                     {/* Mobile Toggle Button */}

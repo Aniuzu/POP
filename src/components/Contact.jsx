@@ -22,7 +22,7 @@ const Contact = () => {
                 <FaMapMarkerAlt className="me-3 mt-1" size={20} />
                 <div>
                   <h5>Address</h5>
-                  <p className="mb-0">No 675 Agbani RoundAbout</p>
+                  <p className="mb-0">New Jerusalem Layout by Coal city eastern extension Enugu</p>
                 </div>
               </div>
               
@@ -30,7 +30,8 @@ const Contact = () => {
                 <FaPhone className="me-3 mt-1" size={20} />
                 <div>
                   <h5>Phone</h5>
-                  <p className="mb-0">(+234) 7064353435</p>
+                  <p className="mb-0">(+234) 8037404546</p>
+                  <p className="mb-0">(+234) 09121750727</p>
                 </div>
               </div>
               
@@ -38,7 +39,7 @@ const Contact = () => {
                 <FaEnvelope className="me-3 mt-1" size={20} />
                 <div>
                   <h5>Email</h5>
-                  <p className="mb-0">MIU@example.com</p>
+                  <p className="mb-0">evanchigozie@gmail.com</p>
                 </div>
               </div>
             </div>

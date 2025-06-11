@@ -1,12 +1,35 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import heroVideo from '../assets/hero-video.mp4';
 import { Link } from 'react-router-dom';
-import './Hero.css'; // Import the CSS file
+import './Hero.css';
 
 const Hero = () => {
+  const videoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    if (videoRef.current) observer.observe(videoRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(!isMuted);
+    }
+  };
+
   return (
-    <section className="hero-section">
+    <section 
+      className={`hero-section ${isVisible ? 'in-view' : ''}`} 
+      ref={videoRef}
+    >
       <Container>
         <Row className="align-items-center">
           <Col lg={6} className="hero-content-col">
@@ -30,15 +53,25 @@ const Hero = () => {
           </Col>
           <Col lg={6} className="hero-video-col">
             <video 
+              ref={videoRef}
               autoPlay 
               loop 
-              muted 
+              muted={isMuted}
               playsInline
               className="hero-video"
             >
               <source src={heroVideo} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
+            <div className="sound-toggle" onClick={toggleMute}>
+              <div className="sound-waves">
+                <div className="sound-bar"></div>
+                <div className="sound-bar"></div>
+                <div className="sound-bar"></div>
+                <div className="sound-bar"></div>
+                <div className="sound-bar"></div>
+              </div>
+            </div>
           </Col>
         </Row>
       </Container>
