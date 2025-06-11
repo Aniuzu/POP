@@ -1,98 +1,75 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import './About.css';
 
-export default function Header() {
-    const [isOpen, setIsOpen] = useState(false);
-    const location = useLocation();
+import SiteImg from '../assets/site.png';
+import TruckImg from '../assets/truck.png';
 
-    // Close navbar when route changes
-    useEffect(() => {
-        setIsOpen(false);
-    }, [location.pathname]);
+const About = () => {
+  return (
+    <section className="about-section py-5">
+      <Container>
+        <Row className="align-items-center">
+          <Col lg={6} className="mb-4 mb-lg-0">
+            <div className="image-wrapper">
+              <img src={SiteImg} alt="Construction Site" className="about-img site-img" />
+              <img src={TruckImg} alt="Truck" className="about-img truck-img" />
+            </div>
+          </Col>
 
-    const toggleNavbar = () => setIsOpen(!isOpen);
-
-    return (
-        <header className="sticky-top">
-            <nav className="navbar navbar-light bg-white shadow-sm py-3">
-                {/* Changed container to container-fluid and added max-width constraint */}
-                <div className="container-fluid" style={{ maxWidth: '1200px' }}>
-                    {/* Logo */}
-                    <Link to="/" className="navbar-brand" onClick={() => setIsOpen(false)}>
-                        <span className="fs-3 fw-bold text-primary">Evantlm services Nig ltd</span>
-                    </Link>
-
-                    {/* Mobile Toggle Button */}
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        onClick={toggleNavbar}
-                        aria-expanded={isOpen}
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-
-                    {/* Navigation Links */}
-                    <div 
-                        className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}
-                        id="navbarContent"
-                    >
-                        <ul className="navbar-nav mx-auto">
-                            <li className="nav-item mx-2">
-                                <Link 
-                                    to="/" 
-                                    className={`nav-link fw-medium ${location.pathname === '/' ? 'active' : ''}`}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Home
-                                </Link>
-                            </li>
-                            <li className="nav-item mx-2">
-                                <Link 
-                                    to="/about" 
-                                    className={`nav-link fw-medium ${location.pathname === '/about' ? 'active' : ''}`}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    About
-                                </Link>
-                            </li>
-                            <li className="nav-item mx-2">
-                                <Link 
-                                    to="/products" 
-                                    className={`nav-link fw-medium ${location.pathname === '/products' ? 'active' : ''}`}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Products
-                                </Link>
-                            </li>
-                            <li className="nav-item mx-2">
-                                <Link 
-                                    to="/contact" 
-                                    className={`nav-link fw-medium ${location.pathname === '/contact' ? 'active' : ''}`}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Contact
-                                </Link>
-                            </li>
-                        </ul>
-
-                        {/* Quote Button */}
-                        <Link
-                            to="/quote"
-                            className="btn btn-primary px-4 py-2 fw-medium text-white"
-                            style={{
-                                borderRadius: '4px',
-                                textDecoration: 'none',
-                                transition: 'all 0.3s ease'
-                            }}
-                            onClick={() => setIsOpen(false)}
-                        >
-                            Request a Quote
-                        </Link>
-                    </div>
+          <Col lg={6}>
+            <div className="about-content">
+              <h2 className="section-title mb-4">About Us</h2>
+              <p className="lead mb-4">
+                We are a leading manufacturer of high-quality concrete blocks and supplier of other building materials.
+              </p>
+              <p className="about-text">
+                Serving construction companies and individual builders since 2010, we take pride in delivering
+                superior products that meet industry standards. Our team of experts ensures every material
+                meets our rigorous quality control process.
+              </p>
+              <div className="about-features mt-4">
+                <div className="feature-item">
+                  <i className="bi bi-check-circle-fill feature-icon"></i>
+                  <span>15+ years industry experience</span>
                 </div>
-            </nav>
-        </header>
-    );
-}
+                <div className="feature-item">
+                  <i className="bi bi-check-circle-fill feature-icon"></i>
+                  <span>Quality certified materials</span>
+                </div>
+                <div className="feature-item">
+                  <i className="bi bi-check-circle-fill feature-icon"></i>
+                  <span>Reliable nationwide delivery</span>
+                </div>
+              </div>
+            </div>
+          </Col>
+        </Row>
+
+        {/* Mission/Vision Section */}
+        <Row className="mt-5 pt-4">
+          <Col md={6} className="mb-4">
+            <div className="mission-card p-4 h-100">
+              <h3 className="h4 mb-3">Our Mission</h3>
+              <p>
+                To provide durable, high-quality building materials that help construct lasting
+                structures while maintaining sustainable practices in our manufacturing process.
+              </p>
+            </div>
+          </Col>
+          <Col md={6} className="mb-4">
+            <div className="vision-card p-4 h-100">
+              <h3 className="h4 mb-3">Our Vision</h3>
+              <p>
+                To become Nigeria's most trusted building materials supplier through innovation,
+                quality products, and exceptional customer service.
+              </p>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </section>
+  );
+};
+
+export default About;
