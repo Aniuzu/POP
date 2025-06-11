@@ -1,16 +1,16 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import heroImage from '../assets/hero-materials.webp';
-import './Hero.css';
+import heroVideo from '../assets/hero-video.mp4';
 import { Link } from 'react-router-dom';
+import './Hero.css'; // Import the CSS file
 
 const Hero = () => {
   return (
     <section className="hero-section">
       <Container>
         <Row className="align-items-center">
-          <Col lg={6} className="hero-content">
-            <div className="text-container">
+          <Col lg={6} className="hero-content-col">
+            <div>
               <h1 className="hero-title">
                 BLOCKS & BUILDING MATERIALS SUPPLIER
               </h1>
@@ -22,21 +22,23 @@ const Hero = () => {
                 to="/quote"
                 variant="primary"
                 size="lg"
-                className="hero-cta"
+                className="hero-cta-btn"
               >
                 Request a Quote
               </Button>
             </div>
           </Col>
-          <Col lg={6} className="hero-image-col">
-            <div className="hero-image-wrapper">
-              <img
-                src={heroImage}
-                alt="Description"
-                loading="lazy"  // This enables native lazy loading
-                className="img-fluid"
-              />
-            </div>
+          <Col lg={6} className="hero-video-col">
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+              className="hero-video"
+            >
+              <source src={heroVideo} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </Col>
         </Row>
       </Container>
