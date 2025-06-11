@@ -26,8 +26,8 @@ const Hero = () => {
   };
 
   return (
-    <section 
-      className={`hero-section ${isVisible ? 'in-view' : ''}`} 
+    <section
+      className={`hero-section ${isVisible ? 'in-view' : ''}`}
       ref={videoRef}
     >
       <Container>
@@ -52,17 +52,20 @@ const Hero = () => {
             </div>
           </Col>
           <Col lg={6} className="hero-video-col">
-            <video 
+            <video
               ref={videoRef}
-              autoPlay 
-              loop 
+              autoPlay
+              loop
               muted={isMuted}
               playsInline
+              preload="metadata"
+              poster="/assets/hero-poster.jpg"
               className="hero-video"
             >
               <source src={heroVideo} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
+
             <div className="sound-toggle" onClick={toggleMute}>
               <div className="sound-waves">
                 <div className="sound-bar"></div>
