@@ -1,20 +1,81 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Carousel, Form, Button } from 'react-bootstrap';
 import { FaQuoteLeft, FaStar, FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
 import './Testimonials.css';
 
-const testimonials = [
-  {
-    id: 1,
-    name: "Pter Tinu",
-    company: "Obi Constructions",
-    rating: 5,
-    text: "Exceptional service and top-notch materials. Highly recommended for quality construction supplies."
-  },
-  // Add more testimonials...
-];
-
 const Testimonials = () => {
+  const [testimonials, setTestimonials] = useState([
+    {
+      id: 1,
+      name: "Peter Tinu",
+      company: "Obi Constructions",
+      rating: 5,
+      text: "Exceptional service and top-notch materials. Highly recommended for quality construction supplies."
+    }
+  ]);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  useEffect(() => {
+    // Fetch testimonials from API
+    const fetchTestimonials = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/v1/testimonials');
+        const data = await response.json();
+        if (response.ok) {
+          setTestimonials(data.data || data);
+        }
+      } catch (error) {
+        console.error('Error fetching testimonials:', error);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/api/v1/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Message sent successfully!');
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          message: ''
+        });
+      } else {
+        throw new Error(data.message || 'Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert(error.message);
+    }
+  };
+
   return (
     <section id="testimonials-contact" className="testimonials-contact-section py-5">
       <Container>
@@ -102,25 +163,53 @@ const Testimonials = () => {
           </Col>
           
           <Col lg={6}>
-            <Form className="contact-form p-4">
+            <Form className="contact-form p-4" onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="formName">
                 <Form.Label>Full Name</Form.Label>
-                <Form.Control type="text" placeholder="Your name" required />
+                <Form.Control 
+                  type="text" 
+                  name="name"
+                  placeholder="Your name" 
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required 
+                />
               </Form.Group>
               
               <Form.Group className="mb-3" controlId="formEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" placeholder="Your email" required />
+                <Form.Control 
+                  type="email" 
+                  name="email"
+                  placeholder="Your email" 
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required 
+                />
               </Form.Group>
               
               <Form.Group className="mb-3" controlId="formPhone">
                 <Form.Label>Phone</Form.Label>
-                <Form.Control type="tel" placeholder="Your phone number" />
+                <Form.Control 
+                  type="tel" 
+                  name="phone"
+                  placeholder="Your phone number" 
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                />
               </Form.Group>
               
               <Form.Group className="mb-3" controlId="formMessage">
                 <Form.Label>Message</Form.Label>
-                <Form.Control as="textarea" rows={4} placeholder="Your message" required />
+                <Form.Control 
+                  as="textarea" 
+                  rows={4} 
+                  name="message"
+                  placeholder="Your message" 
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  required 
+                />
               </Form.Group>
               
               <Button variant="primary" type="submit" className="w-100 py-2">

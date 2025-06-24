@@ -1,77 +1,153 @@
-import React from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import concreteBlocks from '../assets/SolidBlock.webp';
-import sand from '../assets/Sand.webp';
-import cement from '../assets/Cement.webp';
-import gravel from '../assets/Gravel.webp';
-import './Products.css';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Button, Spinner, Alert } from 'react-bootstrap';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
+import './Products.css';
+
+// Import local fallback images
+import concreteBlocksImg from '../assets/SolidBlock.webp';
+import sandImg from '../assets/Sand.webp';
+import cementImg from '../assets/Cement.webp';
+import gravelImg from '../assets/Gravel.webp';
 
 const Products = () => {
-  const products = [
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fallback product data with direct image references
+  const fallbackProducts = [
     {
-      id: 1,
+      _id: '1',
       title: "Concrete Blocks",
-      image: concreteBlocks,
-      description: "High-quality concrete blocks in various sizes and strengths for all construction needs.",
-      features: ["Standard & hollow blocks", "Load-bearing options", "Custom sizes available"]
+      description: "High-quality concrete blocks in various sizes and strengths.",
+      features: ["Standard & hollow blocks", "Load-bearing options"],
+      image: concreteBlocksImg
     },
     {
-      id: 2,
+      _id: '2',
       title: "Sand",
-      image: sand,
-      description: "Premium construction sand for concrete mixing and plastering applications.",
-      features: ["Sharp sand", "Soft sand", "Screened & washed"]
+      description: "Premium construction sand for concrete mixing.",
+      features: ["Sharp sand", "Soft sand"],
+      image: sandImg
     },
     {
-      id: 3,
+      _id: '3',
       title: "Cement",
-      image: cement,
-      description: "Top-grade cement from trusted manufacturers for durable construction.",
-      features: ["42.5R grade", "32.5N grade", "Water-resistant options"]
+      description: "Top-grade cement from trusted manufacturers.",
+      features: ["42.5R grade", "32.5N grade"],
+      image: cementImg
     },
     {
-      id: 4,
+      _id: '4',
       title: "Gravel",
-      image: gravel,
-      description: "Quality aggregates for concrete mixing and drainage applications.",
-      features: ["10mm-20mm sizes", "Granite & limestone", "Clean & durable"]
+      description: "Quality aggregates for concrete mixing.",
+      features: ["10mm-20mm sizes", "Granite & limestone"],
+      image: gravelImg
     }
   ];
 
+  // Get corresponding fallback image
+  const getFallbackImage = (title) => {
+    const imageMap = {
+      'Concrete Blocks': concreteBlocksImg,
+      'Sand': sandImg,
+      'Cement': cementImg,
+      'Gravel': gravelImg
+    };
+    return imageMap[title] || concreteBlocksImg;
+  };
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await axios.get('http://localhost:5000/api/v1/products', {
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 3000
+      });
+
+      const apiProducts = response.data?.data || response.data;
+      
+      if (!Array.isArray(apiProducts)) {
+        throw new Error('Invalid products data format');
+      }
+
+      // Process products with image handling
+      const processedProducts = apiProducts.map(product => ({
+        ...product,
+        // Use local fallback images directly instead of trying to fetch from server
+        image: getFallbackImage(product.title)
+      }));
+
+      setProducts(processedProducts);
+    } catch (err) {
+      console.error('Fetch error:', err);
+      setError(err.message || 'Showing sample products');
+      setProducts(fallbackProducts);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  if (loading && products.length === 0) {
+    return (
+      <Container className="py-5 text-center">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+        <p className="mt-3">Loading products...</p>
+      </Container>
+    );
+  }
+
   return (
-    <section id="products" className="products-section py-5">
+    <section id="products" className="py-5">
       <Container>
         <div className="text-center mb-5">
-          <h2 className="section-title">Our Products</h2>
-          <p className="section-subtitle">Quality building materials for all your construction projects</p>
+          <h2>Our Products</h2>
+          {error && (
+            <Alert variant="warning" onClose={() => setError(null)} dismissible>
+              {error}
+            </Alert>
+          )}
         </div>
 
         <Row xs={1} md={2} lg={4} className="g-4">
           {products.map((product) => (
-            <Col key={product.id}>
-              <Card className="h-100 product-card shadow-sm">
-                <div className="product-image-container">
-                  <Card.Img variant="top" src={product.image} className='img-fluid' loading='lazy' />
+            <Col key={product._id}>
+              <Card className="h-100 shadow-sm">
+                <div className="ratio ratio-4x3">
+                  <Card.Img 
+                    variant="top" 
+                    src={product.image} 
+                    alt={product.title}
+                  />
                 </div>
                 <Card.Body>
-                  <Card.Title className="product-title">{product.title}</Card.Title>
-                  <Card.Text className="product-description">{product.description}</Card.Text>
-                  <ul className="product-features">
-                    {product.features.map((feature, index) => (
-                      <li key={index}>{feature}</li>
-                    ))}
-                  </ul>
+                  <Card.Title>{product.title}</Card.Title>
+                  <Card.Text>{product.description}</Card.Text>
+                  {product.features && (
+                    <ul className="ps-3">
+                      {product.features.map((feature, i) => (
+                        <li key={i}>{feature}</li>
+                      ))}
+                    </ul>
+                  )}
                 </Card.Body>
-                <Card.Footer className="bg-white border-0">
-                  <Button
+                <Card.Footer>
+                  <Button 
                     as={Link}
                     to="/quote"
                     variant="primary"
-                    size="lg"
-                    className="hero-cta"
+                    className="w-100"
                   >
-                    Request a Quote
+                    Get Quote
                   </Button>
                 </Card.Footer>
               </Card>

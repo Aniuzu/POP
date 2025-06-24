@@ -6,5 +6,17 @@ export default defineConfig({
   base: '/',
   resolve: {
     extensions: ['.js', '.jsx', '.json'] // Add other extensions if needed
-  }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+      '/images': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
+  },
 })
