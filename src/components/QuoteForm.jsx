@@ -2,83 +2,80 @@ import { useState, useEffect } from 'react';
 import { Button, Form, Alert, Spinner, Modal, Row, Col } from 'react-bootstrap';
 
 const QuoteForm = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     product: '',
-    quantity: '',
+    quantity: 1,
     projectDetails: ''
   });
 
-  const [products, setProducts] = useState([]); // For product selection dropdown
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [productsLoading, setProductsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successData, setSuccessData] = useState(null);
   const [touchedFields, setTouchedFields] = useState({
     email: false,
     phone: false
   });
 
-  // Fetch products on component mount
+  // Enhanced email validation
+  const isValidEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  // Enhanced phone validation for Nigerian numbers
+  const isValidPhone = (phone) => {
+    const re = /^(0|\+?234)(7|8|9)(0|1)\d{8}$/;
+    return re.test(String(phone).trim());
+  };
+
+  // Fetch products with error handling
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/v1/products', {
+        const response = await fetch(`${API_BASE_URL}/api/v1/products`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          credentials: 'include' // If using cookies/auth
+          credentials: 'include'
         });
-        const data = await response.json();
-        if (response.ok) {
-          setProducts(data.data || []);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+        
+        const data = await response.json();
+        setProducts(data.data || []);
       } catch (error) {
         console.error('Failed to fetch products:', error);
+        setError('Failed to load products. Please refresh the page.');
       } finally {
         setProductsLoading(false);
       }
     };
 
     fetchProducts();
-  }, []);
+  }, [API_BASE_URL]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: name === 'quantity' ? Math.max(1, parseInt(value) || 1) : value
     }));
 
+    // Mark field as touched for validation
     if (name in touchedFields) {
       setTouchedFields(prev => ({ ...prev, [name]: true }));
     }
-  };
-
-  const resetForm = () => {
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      product: '',
-      quantity: '',
-      projectDetails: ''
-    });
-    setTouchedFields({ email: false, phone: false });
-  };
-
-  const isValidEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Requires a dot in domain
-    return re.test(String(email).toLowerCase().trim());
-  };
-
-  const isValidPhone = (phone) => {
-    const re = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/;
-    return re.test(String(phone).trim());
   };
 
   const handleSubmit = async (e) => {
@@ -88,48 +85,47 @@ const QuoteForm = () => {
 
     try {
       // Client-side validation
-      const trimmedData = {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        phone: formData.phone.trim(),
-        product: formData.product.trim(),
-        quantity: formData.quantity.trim(),
-        projectDetails: formData.projectDetails.trim()
+      const requiredFields = {
+        name: 'Full name is required',
+        email: 'Email is required',
+        phone: 'Phone number is required',
+        product: 'Product selection is required',
+        projectDetails: 'Project details are required'
       };
 
       // Check required fields
-      if (!trimmedData.name) throw new Error('Full name is required');
-      if (!trimmedData.email) throw new Error('Email is required');
-      if (!trimmedData.phone) throw new Error('Phone number is required');
-      if (!trimmedData.product) throw new Error('Product selection is required');
-      if (!trimmedData.quantity) throw new Error('Quantity is required');
-      if (!trimmedData.projectDetails) throw new Error('Project details are required');
+      for (const [field, message] of Object.entries(requiredFields)) {
+        if (!formData[field].trim()) {
+          throw new Error(message);
+        }
+      }
 
       // Validate formats
-      if (!isValidEmail(trimmedData.email)) {
-        throw new Error('Please enter a valid email (e.g., yourname@example.com)');
+      if (!isValidEmail(formData.email)) {
+        throw new Error('Please enter a valid email address (e.g., yourname@example.com)');
       }
 
-      if (!isValidPhone(trimmedData.phone)) {
-        throw new Error('Please enter a valid phone number');
+      if (!isValidPhone(formData.phone)) {
+        throw new Error('Please enter a valid Nigerian phone number (e.g., 08012345678 or +2348012345678)');
       }
 
-      // Prepare payload matching backend expectations
+      // Prepare payload
       const payload = {
-        name: trimmedData.name,
-        email: trimmedData.email.toLowerCase().trim(), // normalize on frontend
-        phone: trimmedData.phone,
-        projectDetails: trimmedData.projectDetails,
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
+        phone: formData.phone.trim(),
+        projectDetails: formData.projectDetails.trim(),
         products: [{
-          product: trimmedData.product, // must be a valid product ID
-          quantity: parseInt(trimmedData.quantity) || 1
+          productId: formData.product,
+          quantity: formData.quantity
         }]
       };
-      console.log('Submitting payload:', payload);
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
 
-      const response = await fetch('http://localhost:5000/api/v1/quotes', {
+      // Submit with timeout
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+
+      const response = await fetch(`${API_BASE_URL}/api/v1/quotes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -140,25 +136,39 @@ const QuoteForm = () => {
 
       clearTimeout(timeout);
 
-      const responseData = await response.json();
-
       if (!response.ok) {
-        // Handle validation errors from backend
-        if (responseData.errors) {
-          const errorMessages = responseData.errors.map(err => `${err.param}: ${err.msg}`);
-          throw new Error(errorMessages.join('\n'));
-        }
-        throw new Error(responseData.message || 'Submission failed. Please try again.');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Submission failed. Please try again.');
       }
 
-      setShowSuccessModal(true);
-      resetForm();
+      const responseData = await response.json();
+      
+      setSuccessData({
+        id: responseData.data._id,
+        email: formData.email
+      });
+
+      // Reset form if submission was successful
+      if (responseData.success) {
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          product: '',
+          quantity: 1,
+          projectDetails: ''
+        });
+        setTouchedFields({
+          email: false,
+          phone: false
+        });
+      }
 
     } catch (error) {
       console.error('Submission error:', error);
       setError(
-        error.name === 'AbortError'
-          ? 'Request timed out. Please try again.'
+        error.name === 'AbortError' 
+          ? 'Request timed out. Please try again.' 
           : error.message
       );
     } finally {
@@ -166,8 +176,9 @@ const QuoteForm = () => {
     }
   };
 
-  const emailIsInvalid = touchedFields.email && formData.email && !isValidEmail(formData.email);
-  const phoneIsInvalid = touchedFields.phone && formData.phone && !isValidPhone(formData.phone);
+  // Field validation states
+  const emailIsInvalid = touchedFields.email && !isValidEmail(formData.email);
+  const phoneIsInvalid = touchedFields.phone && !isValidPhone(formData.phone);
 
   return (
     <div id="quote" className="container my-5 py-4 bg-light rounded shadow-sm">
@@ -175,9 +186,7 @@ const QuoteForm = () => {
 
       {error && (
         <Alert variant="danger" onClose={() => setError(null)} dismissible className="mb-4">
-          {error.split('\n').map((line, i) => (
-            <div key={i}>{line}</div>
-          ))}
+          {error}
         </Alert>
       )}
 
@@ -193,7 +202,11 @@ const QuoteForm = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
+                isInvalid={touchedFields.name && !formData.name.trim()}
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide your full name
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
           <Col md={6}>
@@ -202,17 +215,16 @@ const QuoteForm = () => {
               <Form.Control
                 type="tel"
                 name="phone"
-                placeholder="e.g. +1 (555) 123-4567"
+                placeholder="e.g. 08012345678 or +2348012345678"
                 value={formData.phone}
                 onChange={handleChange}
                 isInvalid={phoneIsInvalid}
                 required
+                onBlur={() => setTouchedFields(prev => ({ ...prev, phone: true }))}
               />
-              {phoneIsInvalid && (
-                <Form.Control.Feedback type="invalid">
-                  Please enter a valid phone number
-                </Form.Control.Feedback>
-              )}
+              <Form.Control.Feedback type="invalid">
+                Please enter a valid Nigerian phone number
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
         </Row>
@@ -227,12 +239,11 @@ const QuoteForm = () => {
             onChange={handleChange}
             isInvalid={emailIsInvalid}
             required
+            onBlur={() => setTouchedFields(prev => ({ ...prev, email: true }))}
           />
-          {emailIsInvalid && (
-            <Form.Control.Feedback type="invalid">
-              Please enter a valid email address
-            </Form.Control.Feedback>
-          )}
+          <Form.Control.Feedback type="invalid">
+            Please enter a valid email address
+          </Form.Control.Feedback>
         </Form.Group>
 
         <Row className="mb-3">
@@ -245,6 +256,7 @@ const QuoteForm = () => {
                 onChange={handleChange}
                 required
                 disabled={productsLoading}
+                isInvalid={touchedFields.product && !formData.product}
               >
                 <option value="">-- Select Product --</option>
                 {productsLoading ? (
@@ -257,6 +269,9 @@ const QuoteForm = () => {
                   ))
                 )}
               </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                Please select a product
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
           <Col md={6}>
@@ -285,8 +300,13 @@ const QuoteForm = () => {
             value={formData.projectDetails}
             onChange={handleChange}
             required
+            isInvalid={touchedFields.projectDetails && !formData.projectDetails.trim()}
           />
+          <Form.Control.Feedback type="invalid">
+            Please provide project details
+          </Form.Control.Feedback>
         </Form.Group>
+
         <div className="text-center">
           <Button
             variant="primary"
@@ -312,20 +332,27 @@ const QuoteForm = () => {
         </div>
       </Form>
 
-      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} centered>
+      <Modal show={!!successData} onHide={() => setSuccessData(null)} centered>
         <Modal.Header closeButton>
-          <Modal.Title className="text-success">Success!</Modal.Title>
+          <Modal.Title className="text-success">Request Received!</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Your quote request has been submitted successfully!</p>
-          <p>We will contact you shortly with your quote details.</p>
+          <p>Your quote request <strong>#{successData?.id}</strong> has been received successfully!</p>
+          <p>We'll review your request and contact you at <strong>{successData?.email}</strong>.</p>
+          <Alert variant="info" className="mt-3">
+            <p className="mb-0">You can reply to any future emails from us regarding this quote.</p>
+            <p className="mb-0">Please keep this reference number for your records.</p>
+          </Alert>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="success"
-            onClick={() => setShowSuccessModal(false)}
-          >
+          <Button variant="success" onClick={() => setSuccessData(null)}>
             Close
+          </Button>
+          <Button 
+            variant="outline-primary" 
+            onClick={() => navigator.clipboard.writeText(successData?.id)}
+          >
+            Copy Reference
           </Button>
         </Modal.Footer>
       </Modal>
